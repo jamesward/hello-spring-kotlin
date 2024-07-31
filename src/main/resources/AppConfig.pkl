@@ -1,0 +1,15 @@
+module com.example.demo.AppConfig
+
+class Server {
+  endpoints: Listing<Endpoint>(!isEmpty)
+}
+
+class Endpoint {
+  /// The host name
+  name: String
+
+  /// The port of the service
+  port: UInt16
+}
+
+server: Server

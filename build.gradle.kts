@@ -7,19 +7,17 @@ plugins {
     kotlin("jvm") version "2.0.0"
     kotlin("plugin.spring") version "2.0.0"
     kotlin("plugin.power-assert") version "2.0.0"
+    id("org.pkl-lang") version "0.26.2"
 }
 
 group = "com.example.demo"
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    runtimeOnly("org.pkl-lang:pkl-spring:0.16.0")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 
@@ -28,6 +26,28 @@ kotlin {
 
     compilerOptions {
         freeCompilerArgs.addAll("-Xjsr305=strict")
+    }
+}
+
+pkl {
+    kotlinCodeGenerators {
+        register("configClasses") {
+            generateSpringBootConfig = true
+            generateKdoc = true
+            sourceModules = files("src/main/resources/AppConfig.pkl")
+        }
+    }
+}
+
+tasks.named("configClasses") {
+    doLast {
+        outputs.files.forEach { dir ->
+            fileTree(dir).forEach { file ->
+                val contents = file.readLines()
+                val updated = contents.filterNot { it.contains("ConstructorBinding") }
+                file.writeText(updated.joinToString("\n"))
+            }
+        }
     }
 }
 
