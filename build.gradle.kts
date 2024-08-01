@@ -34,7 +34,7 @@ pkl {
         register("configClasses") {
             generateSpringBootConfig = true
             generateKdoc = true
-            sourceModules = files("src/main/resources/AppConfig.pkl")
+            sourceModules = listOf(file("src/main/resources/AppConfig.pkl").toURI())
         }
     }
 }
