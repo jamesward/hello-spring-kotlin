@@ -2,12 +2,12 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
-    id("org.springframework.boot") version "3.3.2"
+    id("org.springframework.boot") version "3.3.5"
     id("io.spring.dependency-management") version "1.1.6"
-    kotlin("jvm") version "2.0.10"
-    kotlin("plugin.spring") version "2.0.10"
-    kotlin("plugin.power-assert") version "2.0.10"
-    id("org.pkl-lang") version "0.26.3"
+    kotlin("jvm") version "2.0.21"
+    kotlin("plugin.spring") version "2.0.21"
+    kotlin("plugin.power-assert") version "2.0.21"
+    id("org.pkl-lang") version "0.27.0"
 }
 
 group = "com.example.demo"
@@ -35,18 +35,6 @@ pkl {
             generateSpringBootConfig = true
             generateKdoc = true
             sourceModules = listOf(file("src/main/resources/AppConfig.pkl").toURI())
-        }
-    }
-}
-
-tasks.named("configClasses") {
-    doLast {
-        outputs.files.forEach { dir ->
-            fileTree(dir).forEach { file ->
-                val contents = file.readLines()
-                val updated = contents.filterNot { it.contains("ConstructorBinding") }
-                file.writeText(updated.joinToString("\n"))
-            }
         }
     }
 }
